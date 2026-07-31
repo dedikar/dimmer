@@ -95,9 +95,16 @@ class DimmerApp : IDisposable
         Application.Exit();
     }
 
+    const int VK_MENU = 0x12;
+
+    [DllImport("user32.dll")]
+    static extern short GetAsyncKeyState(int vKey);
+
+    static bool IsAltDown() => (GetAsyncKeyState(VK_MENU) & 0x8000) != 0;
+
     void OnMouseWheel(int delta)
     {
-        if (Control.ModifierKeys != Keys.Alt) return;
+        if (!IsAltDown()) return;
 
         var step = 10;
         var next = delta > 0
